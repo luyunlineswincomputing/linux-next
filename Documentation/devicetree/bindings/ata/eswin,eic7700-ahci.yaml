@@ -1,0 +1,80 @@
+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+%YAML 1.2
+---
+$id: http://devicetree.org/schemas/ata/eswin,eic7700-ahci.yaml#
+$schema: http://devicetree.org/meta-schemas/core.yaml#
+
+title: ESWIN EIC7700 SoC SATA Controller
+
+maintainers:
+  - Yulin Lu <luyulin@eswincomputing.com>
+  - Huan He <hehuan1@eswincomputing.com>
+
+description:
+  This document defines device tree bindings for the Synopsys DWC
+  implementation of the AHCI SATA controller found in ESWIN's
+  EIC7700 SoC platform.
+
+allOf:
+  - $ref: snps,dwc-ahci-common.yaml#
+  - $ref: ahci-common.yaml#
+
+properties:
+  compatible:
+    - const: snps,dwc-ahci
+
+  reg:
+    maxItems: 1
+
+  interrupts:
+    maxItems: 1
+
+  ports-implemented:
+    const: 1
+
+  clocks:
+    maxItems: 1
+    description:
+      Unified control of the clock control for SATA's rxoob,
+      pmalive, and phy_ref.
+
+  clock-names:
+    items:
+      const: rxoob
+
+  resets:
+    maxItems: 1
+    description: Application AXI BIU domain reset
+
+  reset-names:
+    const: arst
+
+  required:
+  - compatible
+  - reg
+  - interrupts
+  - clocks
+  - clock-names
+  - resets
+  - reset-names
+  - phys
+  - phy-names
+  - ports-implemented
+
+unevaluatedProperties: false
+
+examples:
+  - |
+    sata: sata@0x50420000{
+      compatible = "snps,dwc-ahci";
+      reg = <0x0 0x50420000 0x0 0x10000>;
+      interrupt-parent = <&plic>;
+      interrupts = <58>;
+      phys = <&sata_phy>;
+      phy-names = "sata-phy";
+      ports-implemented = <0x1>;
+      clocks = <&d0_clock EIC7700_CLK_HSP_SATA_OOB_CLK>;
+      clock-names = "rxoob";
+      resets = <&d0_reset HSPDMA_RST_CTRL SW_HSP_SATA_ARSTN>;
+      reset-names = "arst";
+    };
