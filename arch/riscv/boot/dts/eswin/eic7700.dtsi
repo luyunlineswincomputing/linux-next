@@ -285,6 +285,10 @@
 		sata_phy: sata-phy@50440300 {
 			compatible = "eswin,eic7700-sata-phy";
 			reg = <0x0 0x50440300 0x0 0x40>;
+			clocks = <&hspcrg 17>;
+			clock-names = "phy";
+			resets = <&hspcrg 0>, <&hspcrg 1>;
+			reset-names = "port", "phy";
 			#phy-cells = <0>;
 			status = "disabled";
 		};
@@ -509,6 +513,7 @@
 			eswin,drive-impedance-ohms = <33>;
 			status = "disabled";
 		};
+
 		sata: sata@50420000 {
 			compatible = "eswin,eic7700-ahci", "snps,dwc-ahci";
 			reg = <0x0 0x50420000 0x0 0x10000>;
